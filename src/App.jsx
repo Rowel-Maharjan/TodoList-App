@@ -24,6 +24,7 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos))
   }
 
+
   const handleEdit = (e, id) => {
     btn.current.innerHTML = "Update"
     inputRef.current.focus();
@@ -37,6 +38,7 @@ function App() {
       return item.id !== id
     })
     settodos(newTodo)
+
   }
 
   const handleDelete = (e, id) => {
@@ -44,6 +46,8 @@ function App() {
       return item.id !== id
     })
     settodos(newTodo)
+    localStorage.setItem("todos", JSON.stringify(newTodo))
+
   }
 
   const handleAdd = () => {
@@ -72,8 +76,6 @@ function App() {
 
   // }
 
-
-
   const handleCheckbox = (e) => {
     let id = e.target.name
     let newTodo = todos.filter(item => {
@@ -88,17 +90,19 @@ function App() {
   const handleChange = (e) => {
     settodo(e.target.value)
   }
-
-
+  
 
   return (
     <>
       <Navbar />
       <div className="container mx-auto bg-[#99bfbca8] my-5 p-4 rounded-xl min-h-[80vh]">
+        <h1 className='font-bold text-xl text-center mb-3'>iTask - Manage your TODO in one place</h1>
         <div className="addTodo">
           <h2 className='font-bold text-lg'>Add a Todo</h2>
-          <input ref={inputRef} onChange={handleChange} value={todo} type="text" className='w-1/2 px-2 py-1 my-1 rounded-lg' />
-          <button ref={btn} onClick={handleAdd} disabled={todo.length <= 2} className='bg-blue-300 px-2 py-1 rounded-md mx-3 font-bold hover:bg-blue-400 '>Save</button>
+          <div className="inputBox flex flex-col md:flex-row gap-1 md:gap-0">
+            <input ref={inputRef} onChange={handleChange} value={todo} type="text" className='md:w-1/2 px-2 py-1 my-1 rounded-lg mx-2'/>
+            <button ref={btn} onClick={handleAdd} disabled={todo.length <= 2} className='bg-blue-300 px-2 py-1 rounded-md mx-1 font-bold hover:bg-blue-400 cursor-pointer'>Save</button>
+          </div>
         </div>
 
 
@@ -109,7 +113,7 @@ function App() {
           {todos.length == 0 && <div className='my-2'>-Add todo to display here.</div>}
           {todos.map(item => {
             { saveToLS() }
-            return (showFininshed || !item.isCompleted) && <div key={item.id} className="todo my-2">
+            return (showFininshed || !item.isCompleted) && <div key={item.id} className="todo my-1">
               <div className="todoContent flex justify-between bg-white rounded-lg p-3 items-center">
                 <div className='flex gap-3'>
                   <input type="checkbox" checked={item.isCompleted} onChange={handleCheckbox} name={item.id} />
