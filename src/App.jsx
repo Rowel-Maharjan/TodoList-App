@@ -90,7 +90,12 @@ function App() {
   const handleChange = (e) => {
     settodo(e.target.value)
   }
-  
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && todo.length > 2) {
+      btn.current.click();
+    }
+  };
 
   return (
     <>
@@ -100,7 +105,7 @@ function App() {
         <div className="addTodo">
           <h2 className='font-bold text-lg'>Add a Todo</h2>
           <div className="inputBox flex flex-col md:flex-row gap-1 md:gap-0">
-            <input ref={inputRef} onChange={handleChange} value={todo} type="text" className='md:w-1/2 px-2 py-1 my-1 rounded-lg mx-2'/>
+            <input onKeyDown={handleKeyDown} ref={inputRef} onChange={handleChange} value={todo} type="text" className='md:w-1/2 px-2 py-1 my-1 rounded-lg mx-2'/>
             <button ref={btn} onClick={handleAdd} disabled={todo.length <= 2} className='bg-blue-300 px-2 py-1 rounded-md mx-1 font-bold hover:bg-blue-400 cursor-pointer'>Save</button>
           </div>
         </div>
