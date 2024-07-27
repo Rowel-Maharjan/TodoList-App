@@ -5,6 +5,9 @@ const TodoSchema = new mongoose.Schema({
         type : String,
         required : [true, "Enter todo"],
         minlength : [3, "The length of todo must be greate than two"] 
+    },
+    isCompleted:{
+        type: Boolean
     }
 });
 

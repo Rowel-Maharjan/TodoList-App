@@ -13,47 +13,78 @@ function App() {
   const [todos, settodos] = useState([])
   const [showFininshed, setshowFininshed] = useState(true)
 
-  useEffect(() => {
-    let todoString = localStorage.getItem("todos")
-    let todos = JSON.parse(todoString)
+  const getTodos = async () => {
+
+    let res = await fetch("http://localhost:3000/");
+    let todos = await res.json();
+    // let todoString = localStorage.getItem("todos")
+    // let todos = JSON.parse(todoString)
     settodos(todos);
+  }
+
+  useEffect(() => {
+    getTodos()
   }, [])
 
 
-  const saveToLS = () => {
-    localStorage.setItem("todos", JSON.stringify(todos))
-  }
+  // const saveToLS = async() => {
+  //   console.log(todos)
+  //   let res = await fetch("http://localhost:3000/", {
+  //     method: "POST",
+  //     headers: {"Content-Type": "application/json"},
+  //     body: JSON.stringify(todos)
+  //   });
+  //   // localStorage.setItem("todos", JSON.stringify(todos))
+  // }
 
 
-  const handleEdit = (e, id) => {
+  const handleEdit = async (todo) => {
     btn.current.innerHTML = "Update"
     inputRef.current.focus();
 
     let index = todos.findIndex(item => {
-      return item.id === id
+      return item._id === todo._id
     })
     settodo(todos[index].todo)
 
     let newTodo = todos.filter(item => {
-      return item.id !== id
+      return item._id !== todo._id
     })
     settodos(newTodo)
+    let res = await fetch(`http://localhost:3000/${todo._id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
 
   }
 
-  const handleDelete = (e, id) => {
+  const handleDelete = async (todo) => {
+    // localStorage.setItem("todos", JSON.stringify(newTodo))
+    let res = await fetch(`http://localhost:3000/${todo._id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
     let newTodo = todos.filter(item => {
-      return item.id !== id
+      return item._id !== todo._id
     })
     settodos(newTodo)
-    localStorage.setItem("todos", JSON.stringify(newTodo))
+
 
   }
 
-  const handleAdd = () => {
-    settodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
+  const handleAdd = async () => {
+    // settodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
+
+    let newTodo = { todo, isCompleted: false }
+    let res = await fetch("http://localhost:3000/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newTodo)
+    });
+    let data = await res.json()
+    settodos([...todos, data])
     settodo("")
-    btn.current.innerHTML = "Save"
+
   }
 
   const toggleFinished = () => {
@@ -105,7 +136,7 @@ function App() {
         <div className="addTodo">
           <h2 className='font-bold text-lg'>Add a Todo</h2>
           <div className="inputBox flex flex-col md:flex-row gap-1 md:gap-0">
-            <input onKeyDown={handleKeyDown} ref={inputRef} onChange={handleChange} value={todo} type="text" className='md:w-1/2 px-2 py-1 my-1 rounded-lg mx-2'/>
+            <input onKeyDown={handleKeyDown} ref={inputRef} onChange={handleChange} value={todo} type="text" className='md:w-1/2 px-2 py-1 my-1 rounded-lg mx-2' />
             <button ref={btn} onClick={handleAdd} disabled={todo.length <= 2} className='bg-blue-300 px-2 py-1 rounded-md mx-1 font-bold hover:bg-blue-400 cursor-pointer'>Save</button>
           </div>
         </div>
@@ -114,19 +145,18 @@ function App() {
         <input onChange={toggleFinished} className='mt-5' type="checkbox" checked={showFininshed} /> Show Fininshed
         <h2 className='font-bold text-lg '>Your Todos</h2>
         <div className="flex flex-col todos max-h-[60vh] overflow-auto">
-
           {todos.length == 0 && <div className='my-2'>-Add todo to display here.</div>}
-          {todos.map(item => {
-            { saveToLS() }
-            return (showFininshed || !item.isCompleted) && <div key={item.id} className="todo my-1">
+          {todos.map((item, index) => {
+            // { saveToLS() }
+            return (showFininshed || !item.isCompleted) && <div key={index} className="todo my-1">
               <div className="todoContent flex justify-between bg-white rounded-lg p-3 items-center">
                 <div className='flex gap-3'>
                   <input type="checkbox" checked={item.isCompleted} onChange={handleCheckbox} name={item.id} />
                   <div className={item.isCompleted ? "line-through" : ""} >{item.todo}</div>
                 </div>
                 <div className="change flex gap-3">
-                  <button onClick={(e) => handleEdit(e, item.id)} className='bg-blue-300 px-2 py-1 rounded-md font-bold hover:bg-blue-400'><FaEdit /></button>
-                  <button onClick={(e) => handleDelete(e, item.id)} className='bg-blue-300 px-2 py-1 rounded-md font-bold hover:bg-blue-400 '><MdDeleteForever /></button>
+                  <button onClick={(e) => handleEdit(item)} className='bg-blue-300 px-2 py-1 rounded-md font-bold hover:bg-blue-400'><FaEdit /></button>
+                  <button onClick={(e) => handleDelete(item)} className='bg-blue-300 px-2 py-1 rounded-md font-bold hover:bg-blue-400 '><MdDeleteForever /></button>
                 </div>
               </div>
             </div>
