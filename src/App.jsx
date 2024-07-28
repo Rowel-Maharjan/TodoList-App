@@ -74,7 +74,7 @@ function App() {
 
   const handleAdd = async () => {
     // settodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
-
+    btn.current.innerHTML = "Save"
     let newTodo = { todo, isCompleted: false }
     let res = await fetch("http://localhost:3000/", {
       method: "POST",
