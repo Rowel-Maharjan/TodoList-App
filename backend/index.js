@@ -4,7 +4,7 @@ import todoApi from './controllers/todo.controller.js'
 import bodyParser from 'body-parser';
 import cors from 'cors'
 
-const {getTodo, editTodo, deleteTodo, createTodo} = todoApi;
+const {getTodo, editTodo, deleteTodo, createTodo, patchTodo} = todoApi;
 
 const app = express()
 const port = 3000
@@ -30,3 +30,4 @@ app.get("/", getTodo);
 app.put("/:id", editTodo);
 app.delete("/:id", deleteTodo);
 app.post("/", createTodo);
+app.patch("/:id",patchTodo);

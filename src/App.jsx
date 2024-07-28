@@ -51,11 +51,11 @@ function App() {
       return item._id !== todo._id
     })
     settodos(newTodo)
+    
     let res = await fetch(`http://localhost:3000/${todo._id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
-
   }
 
   const handleDelete = async (todo) => {
@@ -71,6 +71,7 @@ function App() {
 
 
   }
+
 
   const handleAdd = async () => {
     // settodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
@@ -107,14 +108,22 @@ function App() {
 
   // }
 
-  const handleCheckbox = (e) => {
+  const handleCheckbox = async (e) => {
     let id = e.target.name
     let newTodo = todos.filter(item => {
-      if (item.id === id) {
+      if (item._id === id) {
         item.isCompleted = !item.isCompleted
       }
       return item
     })
+    const todoItem = newTodo.find((item) => {
+      return item._id === id
+    })
+    let res = await fetch(`http://localhost:3000/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(todoItem)
+    });
     settodos(newTodo)
   }
 
@@ -151,7 +160,7 @@ function App() {
             return (showFininshed || !item.isCompleted) && <div key={index} className="todo my-1">
               <div className="todoContent flex justify-between bg-white rounded-lg p-3 items-center">
                 <div className='flex gap-3'>
-                  <input type="checkbox" checked={item.isCompleted} onChange={handleCheckbox} name={item.id} />
+                  <input type="checkbox" checked={item.isCompleted} onChange={handleCheckbox} name={item._id} />
                   <div className={item.isCompleted ? "line-through" : ""} >{item.todo}</div>
                 </div>
                 <div className="change flex gap-3">
