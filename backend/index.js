@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.14jdqse.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`)
+mongoose.connect('mongodb+srv://Rowel:oI09pDnFMlQhkHWp@cluster0.14jdqse.mongodb.net/Todo-list?retryWrites=true&w=majority&appName=Cluster0')
 .then(()=>{
     console.log("Connection Successfull")
     app.listen(port, () => {
@@ -32,5 +32,3 @@ app.put("/:id", editTodo);
 app.delete("/:id", deleteTodo);
 app.post("/", createTodo);
 app.patch("/:id",patchTodo);
-
-export default app;
