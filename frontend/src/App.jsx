@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import { v4 as uuidv4 } from 'uuid';
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import { baseURL } from './url';
 
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
 
   const getTodos = async () => {
 
-    let res = await fetch("http://localhost:3000/");
+    let res = await fetch(`${baseURL}/`);
     let todos = await res.json();
     // let todoString = localStorage.getItem("todos")
     // let todos = JSON.parse(todoString)
@@ -52,7 +53,7 @@ function App() {
     })
     settodos(newTodo)
     
-    let res = await fetch(`http://localhost:3000/${todo._id}`, {
+    let res = await fetch(`${baseURL}/${todo._id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
@@ -60,7 +61,7 @@ function App() {
 
   const handleDelete = async (todo) => {
     // localStorage.setItem("todos", JSON.stringify(newTodo))
-    let res = await fetch(`http://localhost:3000/${todo._id}`, {
+    let res = await fetch(`${baseURL}/${todo._id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
@@ -77,7 +78,7 @@ function App() {
     // settodos([...todos, { id: uuidv4(), todo, isCompleted: false }])
     btn.current.innerHTML = "Save"
     let newTodo = { todo, isCompleted: false }
-    let res = await fetch("http://localhost:3000/", {
+    let res = await fetch(`${baseURL}/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newTodo)
@@ -119,7 +120,7 @@ function App() {
     const todoItem = newTodo.find((item) => {
       return item._id === id
     })
-    let res = await fetch(`http://localhost:3000/${id}`, {
+    let res = await fetch(`${baseURL}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(todoItem)
