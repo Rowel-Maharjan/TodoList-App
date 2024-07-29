@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import todoApi from './controllers/todo.controller.js'
 import bodyParser from 'body-parser';
 import cors from 'cors'
+import 'dotenv/config'
 
 const {getTodo, editTodo, deleteTodo, createTodo, patchTodo} = todoApi;
 
@@ -15,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/Todo')
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.14jdqse.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`)
 .then(()=>{
     console.log("Connection Successfull")
     app.listen(port, () => {
